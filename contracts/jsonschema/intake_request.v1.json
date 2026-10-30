@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "scangrid/intake_request.v1",
+  "title": "IntakeRequest (DRAFT v0)",
+  "description": "Schema yêu cầu nội bộ chung cho hai cổng (Kafka và REST). Chốt ở Block 4.",
+  "type": "object",
+  "required": ["request_id", "tenant_id", "workflow", "object_key"],
+  "additionalProperties": false,
+  "properties": {
+    "request_id": { "type": "string", "description": "Idempotency key phía client. TODO: quan hệ với scan_id (ADR-0005)." },
+    "tenant_id": { "type": "string" },
+    "workflow": { "type": "string" },
+    "object_key": { "type": "string", "description": "Con trỏ S3. Không gửi nội dung file qua Kafka." },
+    "sha256": { "type": "string" },
+    "callback_url": { "type": "string", "description": "Chỉ cổng REST. Phải qua kiểm SSRF (Block 15)." }
+  }
+}

@@ -1,0 +1,15 @@
+# Mẫu battle có lỗi. TODO(Block 11): target cần cụm 3 broker từ Block 9 (compose.ha.yml).
+id: B2
+title: Đổi leader
+seed: 42
+runs: 5
+scale: 0.1
+tenants:
+  - { id: acme, weight: 1.0, workflows: [av_only] }
+load:
+  - { duration_s: 600, rate_per_s: 104, channel: kafka }
+faults:
+  - { at_s: 120, kind: kill_container, target: kafka-leader-of:scan.intake, duration_s: 30 }
+  - { at_s: 300, kind: kill_container, target: kafka-leader-of:scan.intake, duration_s: 30 }
+  - { at_s: 480, kind: kill_container, target: kafka-leader-of:scan.intake, duration_s: 30 }
+oracles: [no_loss, no_duplicate_effect, recovery]

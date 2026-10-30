@@ -1,0 +1,18 @@
+-- apply_outcome.lua: TODO(Block 4, bước 4).
+--
+-- Mọi KEYS phải mang cùng hash tag {scanId}, nếu không Redis Cluster trả CROSSSLOT.
+-- Bạn tự thiết kế KEYS/ARGV. Script phải thỏa:
+--   1. Outcome trùng (cùng task_id) → không đổi gì, trả "duplicate".
+--   2. Scan không còn trạng thái → trả "scan_missing", không tạo lại ngầm.
+--   3. Verdict đã chốt → outcome muộn chỉ ghi nhận, trả "late".
+--   4. Chỉ chạm meta và đúng một item (v2): thời gian không tăng theo số file con.
+--   5. Chốt verdict bằng cờ trong cùng script: đúng một lần.
+--   6. Task mới ghi trạng thái "scheduled" trước khi trả về để caller publish.
+--
+-- Câu hỏi bạn phải tự trả lời trước khi viết: lộ trình nói "tính wave trong script Lua",
+-- nhưng planner là hàm thuần TypeScript. Không chạy được TS trong Lua. Chọn một:
+--   (a) chép planner sang Lua (hai bản cài đặt, oracle 5 phải so cả hai),
+--   (b) script 1 trả snapshot + version, Node chạy planner, script 2 ghi có so-version (CAS, có retry),
+--   (c) planner xuất bảng quyết định dạng dữ liệu, Lua chỉ tra bảng.
+-- Ghi lựa chọn và phương án bỏ vào ADR.
+return redis.error_reply("not implemented")

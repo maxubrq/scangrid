@@ -1,0 +1,10 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/domain" },
+    { "path": "services/intake" },
+    { "path": "services/orchestrator" },
+    { "path": "services/delivery" },
+    { "path": "services/policy" }
+  ]
+}

@@ -1,0 +1,15 @@
+# Mẫu battle không lỗi. Đặt mốc SLO và chi phí.
+id: B1
+title: Ngày thường
+seed: 42
+runs: 5
+scale: 0.1          # local 1/10: nền 10,4 file/s
+tenants:
+  - { id: acme,   weight: 0.6, workflows: [av_only, av_cdr_dlp] }
+  - { id: globex, weight: 0.3, workflows: [av_only] }
+  - { id: tiny,   weight: 0.1, workflows: [av_then_sandbox] }
+file_mix: { clean: 0.93, eicar: 0.02, yara_marker: 0.02, archive: 0.02, corrupt: 0.01 }
+load:
+  - { duration_s: 600, rate_per_s: 104, channel: kafka }
+faults: []
+oracles: [no_loss, no_duplicate_effect, complete_engine_list, correct_verdict, correct_stages, slo]

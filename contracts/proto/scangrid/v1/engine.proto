@@ -1,0 +1,51 @@
+// DRAFT v0. Hợp đồng giữa Orchestrator và Engine Gateway (anti-corruption layer).
+// Chốt ở Block 4–5. Chỉ thêm field; không tái sử dụng số field.
+syntax = "proto3";
+
+package scangrid.v1;
+
+enum EngineRole {
+  ENGINE_ROLE_UNSPECIFIED = 0;
+  CLASSIFIER = 1;  // nhận diện loại file
+  SCANNER = 2;     // AV
+  SANITIZER = 3;   // CDR
+  EXTRACTOR = 4;   // giải nén
+  DLP = 5;
+  DETONATOR = 6;   // sandbox
+}
+
+// Một lần chạy một engine trên một item: item × engine × attempt.
+message Task {
+  string task_id = 1;
+  string scan_id = 2;
+  string item_id = 3;
+  string tenant_id = 4;
+  string engine = 5;
+  EngineRole role = 6;
+  uint32 attempt = 7;
+  string object_key = 8;            // claim-check: con trỏ S3, không mang nội dung file
+  string scan_policy_hash = 9;      // cấu hình đã chốt lúc bắt đầu scan (mục 8.8)
+  string engine_schema_version = 10;
+  // TODO(Block 4): deadline? config đã dựng cho đúng schema engine? trace context?
+}
+
+enum OutcomeStatus {
+  OUTCOME_STATUS_UNSPECIFIED = 0;
+  CLEAN = 1;
+  SUSPICIOUS = 2;
+  INFECTED = 3;
+  ERROR = 4;
+  RESOURCE_HAZARD = 5;  // watcher cgroup hủy quét trước OOM (Block 5)
+}
+
+message Outcome {
+  string task_id = 1;
+  string scan_id = 2;
+  string item_id = 3;
+  string engine = 4;
+  uint32 attempt = 5;
+  OutcomeStatus status = 6;
+  string detail = 7;
+  // TODO(Block 5): file con của Extractor (theo lô, chỉ metadata + key S3),
+  // cờ "xong, tổng N file con", kết quả Classifier gắn kèm (mục 8.7).
+}

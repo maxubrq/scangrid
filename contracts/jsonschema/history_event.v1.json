@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "scangrid/history_event.v1",
+  "title": "HistoryEvent (DRAFT v0)",
+  "description": "Một dòng JSONL do Arena ghi từ phía client. Oracle chỉ đọc file này. Chốt ở Block 10.",
+  "type": "object",
+  "required": ["t_mono_ns", "t_wall", "battle", "seed", "run", "kind"],
+  "properties": {
+    "t_mono_ns": { "type": "integer", "description": "Đồng hồ đơn điệu của Arena. Dùng để đo độ trễ, không dùng t_wall." },
+    "t_wall": { "type": "string", "format": "date-time" },
+    "battle": { "type": "string" },
+    "seed": { "type": "integer" },
+    "run": { "type": "integer", "description": "Lần chạy 1..5 của cùng seed." },
+    "kind": {
+      "enum": ["submit", "accepted", "rejected", "verdict", "webhook", "poll", "fault_start", "fault_end"],
+      "description": "TODO: đủ để chấm 8 oracle chưa? Thiếu gì thì thêm trước khi viết oracle."
+    },
+    "channel": { "enum": ["kafka", "rest", "webhook", "poll"] },
+    "request_id": { "type": "string" },
+    "scan_id": { "type": "string" },
+    "tenant_id": { "type": "string" },
+    "workflow": { "type": "string" },
+    "expected": { "type": "object", "description": "Đáp án do population sinh: loại file, verdict mong đợi." },
+    "payload": { "type": "object" }
+  }
+}
